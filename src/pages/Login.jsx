@@ -22,9 +22,13 @@ export default function Login() {
             "body": formData
         })
 
-        if (response?.response?.errors) {
-            setErrors(response?.response?.errors)
+        console.log(response)
+
+        if (response?.json?.errors) {
+            setErrors(response?.json?.errors)
         }
+
+        alert(response?.json?.message)
 
         const token = response?.json?.data?.token
 
@@ -37,13 +41,13 @@ export default function Login() {
 
     return (
         <form ref={form} onSubmit={handleSubmit}>
-            <span>{errors?.email}</span>
-
-            <input type="email" name="email" id="" placeholder="email"/>
+            <input type="string" name="email" id="" placeholder="email"/>
+            <br />
             <span>{errors?.email}</span>
             <br />
             <input type="password" name="password" id="" placeholder="password"/>
-            <span>{errors?.email}</span>
+            <br />
+            <span>{errors?.password}</span>
             <br />
             <input type="submit" value="Войти"/>
         </form>

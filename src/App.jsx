@@ -1,88 +1,111 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import './App.css'
-import { $fetch } from './fetch'
-import {HashRouter, Routes, Route, useNavigate, Navigate} from "react-router-dom"
-import LayoutPage from './pages/layoutPage'
+import { createContext, useContext, useEffect } from "react"
+import { $fetch } from "./fetch"
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom"
+import LayoutPage from "./pages/layoutPage"
 
-import Index from './pages/Index'
-import Register from './pages/register'
-import Login from './pages/login'
-import Profile from './pages/Profile'
-import Logout from './pages/Logout'
 
-export function ProtectedRoute({ children }) {
-    const { user, isAuthChecking } = useContext(UserContext);
+import { useState } from "react"
+
+import Index from "./pages/Index"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Logout from "./pages/Logout"
+import Profile from "./pages/Profile"
+import FullBook from "./pages/FullBook"
+
+
+
+export function CheckIsUser({children}) {
+    const token = localStorage.getItem("token")
+
+    const {user,isAuthChecking} = useContext(UserContext)
 
     if (isAuthChecking) {
         return
     }
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
+    if (!user || !token) {
+        return <Navigate to="/login"/>
     }
 
-    return children;
+    return children
+
 }
 
-export function OnlyUnauthorized({ children }) {
-    const { user, isAuthChecking } = useContext(UserContext);
+export function CheckIsNotUser({children}) {
+    const token = localStorage.getItem("token")
+
+    const {user,isAuthChecking} = useContext(UserContext)
 
     if (isAuthChecking) {
         return
     }
 
-    if (user) {
-        return <Navigate to="/profile" replace />;
+    if (user && token) {
+        return <Navigate to="/profile"/>
     }
 
-    return children;
+    return children
 }
 
 
 export const UserContext = createContext(null)
 
-function App() {
-
-    const [user, setUser] = useState(null)
+export default function App() {
+    
+    const [user,setUser] = useState(null)
     const [isAuthChecking, setIsAuthChecking] = useState(true)
+
+    const token = localStorage.getItem('token') 
 
     useEffect(() => {
 
         async function getData() {
-            const response = await $fetch("user")
+            if (token) {
+                const response = await $fetch("user")
+                
+                const user_response = response?.json?.data
 
-            const data = response?.json?.data
-
-            setUser(data)
+                if (user_response) {
+                    setUser(user_response)
+                }
+            }
             setIsAuthChecking(false)
-            return;
         }
 
         getData()
     }, [])
-
+    
     return (
         <UserContext.Provider value={{user,setUser,isAuthChecking}}>
             <HashRouter>
                 <Routes>
                     <Route element={<LayoutPage />}>
                         <Route index element={<Index />}/>
-
-                        <Route path='/login' element={
-                            <OnlyUnauthorized>
+                        <Route path="/login" element={
+                            <CheckIsNotUser>
                                 <Login />
-                            </OnlyUnauthorized>
+                            </CheckIsNotUser>
                         }/>
-                        <Route path='/logout' element={
-                            <ProtectedRoute>
+                        <Route path="/book/:id" element={
+                            <CheckIsUser>
+                                <FullBook />
+                            </CheckIsUser>
+                        }/>
+                        <Route path="/register" element={
+                            <CheckIsNotUser>
+                                <Register />
+                            </CheckIsNotUser>
+                        }/>
+                        <Route path="/logout" element={
+                            <CheckIsUser>
                                 <Logout />
-                            </ProtectedRoute>
+                            </CheckIsUser>
                         }/>
-                        <Route path='/register' element={<Register />}/>
-                        <Route path='/profile' element={
-                            <ProtectedRoute>
+                        <Route path="/profile" element={
+                            <CheckIsUser>
                                 <Profile />
-                            </ProtectedRoute>
+                            </CheckIsUser>
                         }/>
                     </Route>
                 </Routes>
@@ -90,5 +113,3 @@ function App() {
         </UserContext.Provider>
     )
 }
-
-export default App

@@ -2,13 +2,13 @@ export async function $fetch(route, {method="GET", body=undefined}={}) {
 
     const headers = {}
 
+    const url = new URL("http://localhost:8000/api/" + route)
+
     const token = localStorage.getItem("token")
 
     if (token) {
-        headers.Authorization = "Bearer " +  token
+        headers.Authorization = "Bearer " + token
     }
-
-    const url = new URL("http://localhost:8000/api/" + route)
 
     if (method === "GET" && body) {
         url.search = new URLSearchParams(body)
@@ -29,4 +29,5 @@ export async function $fetch(route, {method="GET", body=undefined}={}) {
     }
 
     return {response,json}
+
 }

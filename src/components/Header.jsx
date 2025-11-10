@@ -1,17 +1,11 @@
 import { useContext, useEffectEvent } from "react"
 import {Link} from "react-router-dom"
 import { UserContext } from "../App"
-import { useEffect } from "react"
 
 export default function Header() {
 
     const {user} = useContext(UserContext)
     const token = localStorage.getItem("token")
-
-    useEffect(() => {
-        console.log(user)
-        console.log(token)
-    })
 
     return (
         <header className="header">
@@ -32,7 +26,7 @@ export default function Header() {
                 </ul>
             </nav>
             {
-                !user && !token && (
+                !token && (
                     <>
                         <Link to="/login">
                             <button>
