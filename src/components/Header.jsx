@@ -15,13 +15,8 @@ export default function Header() {
                     <li>
                         <Link to="/">Главная</Link>
                     </li>
-
                     <li>
-                        <Link to="/books">Книги</Link>
-                    </li>
-
-                    <li>
-                        <Link to="/reviews">Отзывы</Link>
+                        <Link to="/cart">Корзина</Link>
                     </li>
                 </ul>
             </nav>

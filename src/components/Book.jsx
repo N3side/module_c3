@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { $fetch } from "../fetch"
 
 export default function Book({book, setCurrent}) {
 
@@ -29,7 +30,7 @@ export default function Book({book, setCurrent}) {
             </div>
 
             <div className="buttons">
-                <Link to={"book/" + book?.id}>
+                <Link to={"/book/" + book?.id}>
                     <button>Больше</button>
                 </Link>
             </div>

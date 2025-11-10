@@ -12,6 +12,7 @@ import Register from "./pages/Register"
 import Logout from "./pages/Logout"
 import Profile from "./pages/Profile"
 import FullBook from "./pages/FullBook"
+import Cart from "./pages/Cart"
 
 
 
@@ -105,6 +106,11 @@ export default function App() {
                         <Route path="/profile" element={
                             <CheckIsUser>
                                 <Profile />
+                            </CheckIsUser>
+                        }/>
+                        <Route path="/cart" element={
+                            <CheckIsUser>
+                                <Cart />
                             </CheckIsUser>
                         }/>
                     </Route>

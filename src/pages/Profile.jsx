@@ -7,7 +7,7 @@ export default function Profile() {
     
     return (
         <>
-            <h1>Профиль</h1>
+            <h2>Профиль</h2>
 
             <div className="profile">
                 <h3>{user?.id}</h3>

@@ -3,6 +3,7 @@ import { $fetch } from "../fetch"
 import { useLocation } from "react-router-dom"
 import { Link } from "react-router-dom"
 import UniversalModal from "../components/modal"
+import Review from "../components/Review"
 
 export default function FullBook() {
 
@@ -67,7 +68,19 @@ export default function FullBook() {
         setBookText(response?.json?.data?.text)
     }
 
+    const [mode,setMode] = useState("read")
 
+    async function AddToCart() {
+        const response = await $fetch(`cart/${book?.id}`, {
+            method: "POST",
+        })
+
+        const message = response?.json?.message
+
+        if (message) {
+            alert(message)
+        }
+    }
 
     return (
         <div className="Book">
@@ -120,15 +133,7 @@ export default function FullBook() {
                 Отзывы книги
                 {
                     reviews && Array.isArray(reviews?.items) && reviews.items.map((review) => (
-                        <div className="user" key={review.id}>
-                        <img src="" alt="" />
-                        <h2>Анонимный пользователь</h2>
-
-                        <div className="review">
-                            <div className="rating">{review?.rating}</div>
-                            <div className="text">{review?.text}</div>
-                        </div>
-                        </div>
+                        <Review review={review} mode={mode} setMode={setMode}/>
                     ))
 }
 
@@ -154,6 +159,8 @@ export default function FullBook() {
                 <button onClick={() => {setIsOpen1(true); getReviews()}}>Отзывы</button>
 
                 <button onClick={() => {setIsOpen2(true); Read()}}>Читать</button>
+
+                <button onClick={AddToCart}>Добавить в корзину</button>
 
             </div>
         </div>
